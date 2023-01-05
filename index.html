@@ -35,6 +35,8 @@
         margin-top: 150px;
         text-align: center;
         align-items: center;
+        display: flex;
+        flex-direction: column;
       }
       .main_visual_1 > div:first-child {
         font-weight: 700;
@@ -88,7 +90,7 @@
         font-weight: 700;
         transform: scale(0.95);
       }
-      img {
+      .sparkle {
         transition: 0.6s;
         position: absolute;
         top: 0px;
@@ -98,6 +100,10 @@
         width: 800px;
         user-select: none;
         pointer-events: none;
+      }
+      .doggo {
+        width: 100px;
+        position: relative;
       }
     </style>
     <script src="./jquery-3.6.3.min.js"></script>
@@ -121,15 +127,23 @@
         <div class="result">
           1부터 50까지 랜덤으로 정해진 수를 맞추시면 됩니다. <br />
         </div>
-        <div class="count">0회 시도하셨습니다</div>
+        <div class="count">남은 기회는 10번 입니다.</div>
+        <img
+          hidden
+          class="doggo"
+          src="https://media.tenor.com/XSXXdxJ_pHAAAAAM/dance-dog.gif"
+          alt="dance-dog"
+        />
         <button class="retry">다시하기!</button>
       </div>
     </div>
     <img
+      class="sparkle"
       hidden
       src="https://media.tenor.com/kzNkZXjCaGoAAAAi/gold-glitter.gif"
       alt="sparkle"
     />
+
     <script>
       $(document).ready(function () {
         let count = 0;
@@ -177,27 +191,27 @@
 
               paintCount(count);
             } else {
-              if (count <= 10) {
-                $(".result").html(`정답입니다..어떻게 알았지..`);
-                $(".userInput").attr("disabled", true);
-                $("img").attr("hidden", false);
-              } else {
-                $(".result").html(`정답입니다..어려운가 봐요?ㅋㅋ`);
-                $(".userInput").attr("disabled", true);
-                $("img").attr("hidden", false);
-              }
+              $(".result").html(`정답입니다..어떻게 알았지..`);
+              $(".count").html(``);
+
+              $(".userInput").attr("disabled", true);
+              $(".sparkle").attr("hidden", false);
             }
+          }
+          if (count == 10) {
+            $(".result").html(`하하..게임 오버다...`);
+            $(".userInput").attr("disabled", true);
+            $(".count").html(``);
+            $(".doggo").attr("hidden", false);
           }
           // return false;
         });
 
         function paintCount(count) {
-          if (count <= 10) {
-            $(".count").html(`${count}회 시도 하셨습니다`);
-          } else if (count <= 20) {
-            $(".count").html(`어려운가 봐요..?<br> ${count}회 시도 하셨습니다`);
+          if (count <= 8) {
+            $(".count").html(`남은 기회가 ${10 - count}번 남았습니다`);
           } else {
-            $(".count").html(`안 셀테니까 천천히 해보세요`);
+            $(".count").html(`마지막 기회입니다!`);
           }
         }
         $(".retry").on("click", function () {
