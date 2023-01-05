@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숫자맞추기 게임</title>
+    <style>
+      @font-face {
+        font-family: "NanumSquareNeo-Variable";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2")
+          format("woff2");
+        font-weight: normal;
+        font-style: normal;
+      }
+      * {
+        overflow-y: hidden;
+        font-family: "NanumSquareNeo-Variable";
+
+        margin: 0;
+        padding: 0;
+      }
+      .wrap {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        align-items: center;
+        width: 100%;
+        position: relative;
+      }
+      .main_visual_1 {
+        border: 1px solid black;
+        width: 60%;
+        margin: 0 auto;
+        margin-top: 150px;
+        text-align: center;
+        align-items: center;
+      }
+      .main_visual_1 > div:first-child {
+        font-weight: 700;
+        font-size: 28px;
+        margin: 2rem;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      input {
+        box-sizing: border-box;
+        padding-left: 14px;
+        text-align: center;
+        font-size: 22px;
+        width: 100px;
+        height: 40px;
+        margin: 2rem 0;
+      }
+      .result {
+        margin: 1rem 0;
+        font-size: 18px;
+        font-weight: 400;
+        transition: 0.4s;
+      }
+      .count {
+        transition: 0.4s;
+        margin: 0 0 1rem;
+        font-size: 18px;
+      }
+      input:focus {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: black;
+      }
+      .retry {
+        cursor: pointer;
+        margin: 16px;
+        font-size: 18px;
+        padding: 0.8rem 1.2rem;
+        transition: 0.4s;
+        border: 1px solid black;
+      }
+      .retry:hover {
+        border: 1px rgba(0, 0, 0, 0.1) solid;
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+      .retry:active {
+        background-color: black;
+        color: white;
+        font-weight: 700;
+        transform: scale(0.95);
+      }
+      img {
+        transition: 0.6s;
+        position: absolute;
+        top: 0px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 800px;
+        user-select: none;
+        pointer-events: none;
+      }
+    </style>
+    <script src="./jquery-3.6.3.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="main_visual_1">
+        <div>UP & DOWN GAME</div>
+        <form>
+          <label for="userInput">1에서 50사이의 숫자를 입력해주세요</label>
+          <input
+            autofocus
+            placeholder="30"
+            class="userInput"
+            type="number"
+            min="1"
+            max="50"
+            id="userInput"
+          />
+        </form>
+        <div class="result">
+          1부터 50까지 랜덤으로 정해진 수를 맞추시면 됩니다. <br />
+        </div>
+        <div class="count">0회 시도하셨습니다</div>
+        <button class="retry">다시하기!</button>
+      </div>
+    </div>
+    <img
+      hidden
+      src="https://media.tenor.com/kzNkZXjCaGoAAAAi/gold-glitter.gif"
+      alt="sparkle"
+    />
+    <script>
+      $(document).ready(function () {
+        let count = 0;
+        let comNumber = Math.floor(Math.random() * 50);
+        $("form").on("submit", function (e) {
+          e.preventDefault();
+
+          let guideNum = Math.floor(Math.random() * 5) + 10;
+          let userNumber = $(".userInput").val();
+          if (userNumber == "") {
+            $(".result").html(`숫자로 써라...`);
+          } else {
+            if (comNumber - guideNum > userNumber) {
+              $(".result").html(`고르신 숫자(${userNumber})가 많이 작습니다!`);
+              count += 1;
+              paintCount(count);
+            } else if (comNumber + guideNum < userNumber) {
+              $(".result").html(`고르신 숫자(${userNumber})가 많이 큽니다!`);
+              count += 1;
+              paintCount(count);
+            } else if (comNumber > userNumber) {
+              $(".result").html(`고르신 숫자(${userNumber})가 더 작습니다!`);
+              count += 1;
+              paintCount(count);
+            } else if (comNumber < userNumber) {
+              $(".result").html(`고르신 숫자(${userNumber})가 더 큽니다!`);
+              count += 1;
+              paintCount(count);
+            } else {
+              $(".result").html(`정답입니다..어떻게 알았지..`);
+              $(".userInput").attr("disabled", true);
+              $("img").attr("hidden", false);
+            }
+          }
+        });
+
+        function paintCount(count) {
+          if (count <= 10) {
+            $(".count").html(`${count}회 시도 하셨습니다`);
+          } else if (count <= 20) {
+            $(".count").html(`어려운가 봐요..?<br> ${count}회 시도 하셨습니다`);
+          } else {
+            $(".count").html(`안 셀테니까 천천히 해보세요`);
+          }
+        }
+        $(".retry").on("click", function () {
+          count = 0;
+          comNumber = Math.floor(Math.random() * 50);
+          $("img").attr("hidden", true);
+          $(".count").html("0회 시도하셨습니다");
+          $(".userInput").val("");
+          $(".userInput").attr("disabled", false);
+          $(".result").html(
+            "1부터 50까지 랜덤으로 정해진 수를 맞추시면 됩니다."
+          );
+          $(".userInput").focus();
+        });
+      });
+    </script>
+  </body>
+</html>
