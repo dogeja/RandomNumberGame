@@ -16,7 +16,7 @@
       * {
         overflow-y: hidden;
         font-family: "NanumSquareNeo-Variable";
-
+        user-select: none;
         margin: 0;
         padding: 0;
       }
@@ -146,34 +146,49 @@
             $(".result").html(`방금 전에 입력하신 숫자에요!`);
           } else {
             if (comNumber - guideNum > userNumber) {
-              $(".result").html(`고르신 숫자(${userNumber})가 많이 작습니다!`);
+              $(".result").html(
+                `고르신 숫자(${userNumber})가 정답보다 많이 작습니다!`
+              );
               count += 1;
               selectNumber = userNumber;
               paintCount(count);
             } else if (comNumber + guideNum < userNumber) {
-              $(".result").html(`고르신 숫자(${userNumber})가 많이 큽니다!`);
+              $(".result").html(
+                `고르신 숫자(${userNumber})가 정답보다 많이 큽니다!`
+              );
               count += 1;
               selectNumber = userNumber;
 
               paintCount(count);
             } else if (comNumber > userNumber) {
-              $(".result").html(`고르신 숫자(${userNumber})가 더 작습니다!`);
+              $(".result").html(
+                `고르신 숫자(${userNumber})가 정답보다 더 작습니다!`
+              );
               count += 1;
               selectNumber = userNumber;
 
               paintCount(count);
             } else if (comNumber < userNumber) {
-              $(".result").html(`고르신 숫자(${userNumber})가 더 큽니다!`);
+              $(".result").html(
+                `고르신 숫자(${userNumber})가 정답보다 더 큽니다!`
+              );
               count += 1;
               selectNumber = userNumber;
 
               paintCount(count);
             } else {
-              $(".result").html(`정답입니다..어떻게 알았지..`);
-              $(".userInput").attr("disabled", true);
-              $("img").attr("hidden", false);
+              if (count <= 10) {
+                $(".result").html(`정답입니다..어떻게 알았지..`);
+                $(".userInput").attr("disabled", true);
+                $("img").attr("hidden", false);
+              } else {
+                $(".result").html(`정답입니다..어려운가 봐요?ㅋㅋ`);
+                $(".userInput").attr("disabled", true);
+                $("img").attr("hidden", false);
+              }
             }
           }
+          // return false;
         });
 
         function paintCount(count) {
